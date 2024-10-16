@@ -1,0 +1,10 @@
+existingSecret: "kafka-h-user-passwords"
+
+extraEnvVars:
+  - name: KAFKA_USERNAME
+    value: "user1"
+  - name: KAFKA_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: kafka-h-user-passwords
+        key: client-passwords

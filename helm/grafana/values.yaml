@@ -1,0 +1,42 @@
+service:
+  type: NodePort
+  port: 3000
+  nodePort: 32000
+
+namespace: kafka-healthcheck
+
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+      - name: Prometheus
+        type: prometheus
+        url: http://prometheus-server.kafka-healthcheck.svc.cluster.local:9090
+        access: proxy
+        isDefault: true
+
+resources:
+  requests:
+    memory: "256Mi"
+    cpu: "100m"
+  limits:
+    memory: "512Mi"
+    cpu: "200m"
+
+persistence:
+  enabled: true
+  accessMode: ReadWriteOnce
+  size: 1Gi
+  storageClass: "standard"
+
+config:
+  grafana.ini:
+    server:
+      root_url: http://localhost:3000
+    auth:
+      disable_login_form: false
+      disable_signout_menu: false
+    log:
+      mode: console
+      level: info
+      

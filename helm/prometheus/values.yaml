@@ -1,0 +1,43 @@
+# Default values for Prometheus
+# Prometheus server configuration
+namespace: kafka-healthcheck
+server:
+  global:
+    scrape_interval: 15s
+    evaluation_interval: 15s
+  # Prometheus server pod configuration
+  pod:
+    replicas: 1
+    resources:
+      limits:
+        cpu: 200m
+        memory: 512Mi
+      requests:
+        cpu: 100m
+        memory: 256Mi
+  # Prometheus server service configuration
+  service:
+    type: NodePort
+    port: 9090
+    nodePort: 32001
+# Prometheus alertmanager configuration
+alertmanager:
+  enabled: false
+# Prometheus node exporter configuration
+nodeExporter:
+  enabled: false
+# Prometheus pushgateway configuration
+pushgateway:
+  enabled: true
+  service:
+    type: NodePort
+    nodePort: 32002
+# Prometheus kube-state-metrics configuration
+kubeStateMetrics:
+  enabled: false
+# Prometheus blackbox exporter configuration
+blackboxExporter:
+  enabled: false
+# Prometheus grafana configuration
+grafana:
+  enabled: false

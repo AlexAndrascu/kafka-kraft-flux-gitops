@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: health-check-service
+  namespace: kafka-healthcheck
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: health-check-service
+  template:
+    metadata:
+      labels:
+        app: health-check-service
+    spec:
+      containers:
+      - name: health-check-service
+        image: health_check_service:latest
+        ports:
+        - containerPort: 5000
+        env:
+        - name: KAFKA_USERNAME
+          value: "user1"
+        - name: KAFKA_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: kafka-h-user-passwords
+              key: client-passwords
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        imagePullPolicy: Never    
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: health-check-service
+  namespace: kafka-healthcheck
+spec:
+  selector:
+    app: health-check-service
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000

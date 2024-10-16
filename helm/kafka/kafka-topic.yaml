@@ -1,0 +1,33 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-kafka-topic
+  namespace: kafka-healthcheck
+spec:
+  template:
+    spec:
+      containers:
+      - name: kafka-topic-creator
+        image: docker.io/bitnami/kafka:3.8.0-debian-12-r5
+        env:
+        - name: KAFKA_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: kafka-h-user-passwords
+              key: client-passwords
+        command: ["/bin/bash", "-c"]
+        args:
+          - |
+            sleep 30;
+            cat <<EOF > /tmp/client.properties
+            security.protocol=SASL_PLAINTEXT
+            sasl.mechanism=SCRAM-SHA-256
+            sasl.jaas.config=org.apache.kafka.common.security.scram.ScramLoginModule required \
+                username="user1" \
+                password="${KAFKA_PASSWORD}";
+            EOF
+              /opt/bitnami/kafka/bin/kafka-topics.sh --create --topic health_checks_topic --bootstrap-server kafka-h-controller-0.kafka-h-controller-headless.kafka-healthcheck.svc.cluster.local:9092,kafka-h-controller-1.kafka-h-controller-headless.kafka-healthcheck.svc.cluster.local:9092,kafka-h-controller-2.kafka-h-controller-headless.kafka-healthcheck.svc.cluster.local:9092 --command-config /tmp/client.properties;
+            echo "Topic creation completed successfully."
+            echo "Here are the available topics."
+            /opt/bitnami/kafka/bin/kafka-topics.sh --list --bootstrap-server kafka-h-controller-0.kafka-h-controller-headless.kafka-healthcheck.svc.cluster.local:9092 --command-config /tmp/client.properties
+      restartPolicy: Never

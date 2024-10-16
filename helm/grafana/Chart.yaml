@@ -1,0 +1,8 @@
+apiVersion: v2
+name: grafana
+version: 1.0.0
+description: A Helm chart for deploying Grafana
+maintainers:
+  - name: Alex Andrascu
+    email: aix02820@gmail.com
+appVersion: 7.5.7
