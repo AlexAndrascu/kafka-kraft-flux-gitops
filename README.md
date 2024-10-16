@@ -32,13 +32,18 @@ kubectl cluster-info --context kind-kafka-cluster
 ```
 helm install dashboard kubernetes-dashboard/kubernetes-dashboard -n kubernetes-dashboard --create-namespace
 ```
-
+4. Deploy Kafka 
+```
+helm -n kafka-healthcheck install kafka-h oci://registry-1.docker.io/bitnamicharts/kafka -f .\helm\kafka\values.yaml --create-namespace
+```
+5. Deploy the monitoring tools
 ```
 cd helm/grafana
 helm -n kafka-healthcheck install grafana .
 cd helm/prometheus
 helm install prometheus prometheus-community/prometheus -f values.yaml -n kafka-healthcheck
 ```
+
 9. Configure logging for the services to log health check results.
 10. Set up Flux to automatically deploy the services when changes are pushed to the GitOps repository.
 11. Kubernetes Dashboard Service Account:
