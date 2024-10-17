@@ -2,8 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: consumer-health-check-service
-  labels:
-    app: consumer-health-check-service
+  namespace: kafka-healthcheck
 spec:
   replicas: 1
   selector:
@@ -15,17 +14,36 @@ spec:
         app: consumer-health-check-service
     spec:
       containers:
-        - name: consumer-health-check-service
-          image: <your-docker-registry>/consumer-health-check-service:latest
-          ports:
-            - containerPort: 8080
-          env:
-            - name: KAFKA_BOOTSTRAP_SERVERS
-              value: kafka:9092
-          resources:
-            limits:
-              cpu: 500m
-              memory: 512Mi
-            requests:
-              cpu: 100m
-              memory: 256Mi
+      - name: consumer-health-check-service
+        image: consumer_health_check_service:latest
+        ports:
+        - containerPort: 5001
+        env:
+        - name: KAFKA_USERNAME
+          value: "user1"
+        - name: KAFKA_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: kafka-h-user-passwords
+              key: client-passwords
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+        imagePullPolicy: Never  
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: consumer-health-check-service
+  namespace: kafka-healthcheck
+spec:
+  selector:
+    app: consumer-health-check-service
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5001
