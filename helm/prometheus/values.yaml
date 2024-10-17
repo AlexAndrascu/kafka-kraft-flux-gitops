@@ -40,4 +40,4 @@ blackboxExporter:
   enabled: false
 # Prometheus grafana configuration
 grafana:
-  enabled: false
+  enabled: true
