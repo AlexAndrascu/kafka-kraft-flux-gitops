@@ -16,16 +16,6 @@ spec:
       containers:
       - name: consumer-health-check-service
         image: consumer_health_check_service:latest
-        ports:
-        - containerPort: 5001
-        env:
-        - name: KAFKA_USERNAME
-          value: "user1"
-        - name: KAFKA_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: kafka-h-user-passwords
-              key: client-passwords
         resources:
           limits:
             memory: "512Mi"
@@ -33,7 +23,9 @@ spec:
           requests:
             memory: "256Mi"
             cpu: "250m"
-        imagePullPolicy: Never  
+        ports:
+        - containerPort: 5001
+        imagePullPolicy: Never
 ---
 apiVersion: v1
 kind: Service
