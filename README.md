@@ -43,7 +43,7 @@ Create the `health_checks_topic`:
 kubectl apply -f .\helm\kafka\kafka-topic.yaml
 ```
 
-5. ### Deploy the Health Check and Health Check consumer services
+5. ### Deploy the Health Check services
 
 Build the image:
 ```
