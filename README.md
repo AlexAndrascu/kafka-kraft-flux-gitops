@@ -93,10 +93,12 @@ kubectl apply -n kubernetes-dashboard -f .\dashboard-adminuser.yaml -f .\dashboa
 ```
 🤖 For detailed instructions on each step, refer to the documentation in the individual files and directories.
 
-![alt text](image-1.png)
+![alt text](assets/image-1.png)
 
-![alt text](image.png)
+![alt text](assets/image.png)
 
-![alt text](image-2.png)
+![alt text](assets/image-2.png)
 
-![alt text](image-3.png)
+![alt text](assets/image-3.png)
+
+![alt text](assets/image-4.png)
