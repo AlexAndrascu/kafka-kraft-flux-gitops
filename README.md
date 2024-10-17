@@ -7,8 +7,8 @@ This project is a microservices architecture with Kafka as the messaging backbon
 
 To start the cluster and deploy the services, follow these steps:
 
-1. Make sure Helm and kubectl are installed on your local machine
-2. We'll be using Kind to setup a Kubernetes cluster with 1 control plane and 3 worker nodes
+1. ### Make sure `Helm`, `kubectl` and [Kind](https://kind.sigs.k8s.io/) are installed on your local machine
+2. ### We'll be using Kind to setup a Kubernetes cluster with 1 control plane and 3 worker nodes
 ```
 kind create cluster --name kafka-cluster --config .\kind-config.yaml
 ```
@@ -27,16 +27,37 @@ You can now use your cluster with:
 
 kubectl cluster-info --context kind-kafka-cluster
 ```
-3. Optionally install kubernetes dashboard:
+3. ### Optionally install kubernetes dashboard:
 
 ```
 helm install dashboard kubernetes-dashboard/kubernetes-dashboard -n kubernetes-dashboard --create-namespace
 ```
-4. Deploy Kafka 
+4. ### Deploy Kafka 
 ```
 helm -n kafka-healthcheck install kafka-h oci://registry-1.docker.io/bitnamicharts/kafka -f .\helm\kafka\values.yaml --create-namespace
 ```
-5. Deploy the monitoring tools
+
+5. ### Deploy the Health Check and Health Check consumer services
+
+Build the image:
+```
+cd services HealthCheckService
+docker build -t health_check_service:latest .
+```
+
+Load the image into the local cluster:
+```
+kind load docker-image health_check_service:latest --name "kafka-cluster"
+```
+
+Deploy
+
+```
+kubectl apply -f deployment.yaml
+```
+❕ Follow the same steps for the `ConsumerHealthCheckService` adjusting the image name accordingly
+
+6. ### Deploy the monitoring tools
 ```
 cd helm/grafana
 helm -n kafka-healthcheck install grafana .
@@ -44,13 +65,11 @@ cd helm/prometheus
 helm install prometheus prometheus-community/prometheus -f values.yaml -n kafka-healthcheck
 ```
 
-9. Configure logging for the services to log health check results.
-10. Set up Flux to automatically deploy the services when changes are pushed to the GitOps repository.
-11. Kubernetes Dashboard Service Account:
+9. ### Configure logging for the services to log health check results.
+10. ### Set up Flux to automatically deploy the services when changes are pushed to the GitOps repository.
+11. ### Kubernetes Dashboard Service Account:
 ```
 cd dashboard
 kubectl apply -n kubernetes-dashboard -f .\dashboard-adminuser.yaml -f .\dashboard-clusterrole.yaml -f .\dash-secret.yaml
 ```
-For detailed instructions on each step, refer to the documentation in the individual files and directories.
-
-```
+🤖 For detailed instructions on each step, refer to the documentation in the individual files and directories.
