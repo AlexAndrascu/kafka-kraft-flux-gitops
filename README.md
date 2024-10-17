@@ -57,7 +57,20 @@ kubectl apply -f deployment.yaml
 ```
 ❕ Follow the same steps for the `ConsumerHealthCheckService` adjusting the image name accordingly
 
-6. ### Deploy the monitoring tools
+6. ### Test the services 
+
+You can use an ephemeral busybox pod like so:
+
+```
+kubectl run -i --tty --rm debug --image=busybox --restart=Never -- sh
+# wget -qO- http://health-check-service.kafka-healthcheck:80/check_health
+[]
+# wget -qO- http://consumer-health-check-service.kafka-healthcheck:80/get_latest_health_check
+wget: server returned error: HTTP/1.1 404 NOT FOUND
+```
+⚠️ The `/get_latest_health_check` endpoint will return 404 when there are no messages in the `health_check_topic`
+
+7. ### Deploy the monitoring tools
 ```
 cd helm/grafana
 helm -n kafka-healthcheck install grafana .
