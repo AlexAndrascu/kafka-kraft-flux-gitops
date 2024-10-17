@@ -2,6 +2,9 @@
 
 This project is a microservices architecture with Kafka as the messaging backbone. It includes the deployment and management of services on a Kubernetes cluster using GitOps principles.
 
+⚠️ The project is an actual devops exercise and **is not intended for production enviroments** as such.
+
+It is however a good starting point for getting up to speed with k8s, kafka, python and flux
 
 ## Getting Started
 
