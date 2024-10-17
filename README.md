@@ -37,6 +37,12 @@ helm install dashboard kubernetes-dashboard/kubernetes-dashboard -n kubernetes-d
 helm -n kafka-healthcheck install kafka-h oci://registry-1.docker.io/bitnamicharts/kafka -f .\helm\kafka\values.yaml --create-namespace
 ```
 
+Create the `health_checks_topic`:
+
+```
+kubectl apply -f .\helm\kafka\kafka-topic.yaml
+```
+
 5. ### Deploy the Health Check and Health Check consumer services
 
 Build the image:
