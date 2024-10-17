@@ -92,3 +92,5 @@ cd dashboard
 kubectl apply -n kubernetes-dashboard -f .\dashboard-adminuser.yaml -f .\dashboard-clusterrole.yaml -f .\dash-secret.yaml
 ```
 🤖 For detailed instructions on each step, refer to the documentation in the individual files and directories.
+
+![alt text](image.png)
